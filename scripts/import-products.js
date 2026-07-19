@@ -1,6 +1,11 @@
 // Script sekali pakai: import produk dari template_import_produk.xlsx ke Supabase.
 // Jalankan dengan: node --env-file=.env.local scripts/import-products.js
 // (--env-file supaya SUPABASE_SERVICE_ROLE_KEY di .env.local bisa dibaca script ini)
+//
+// Kolom "description" kosong di spreadsheet? Otomatis diisi dari
+// categories.tagline + categories.strengths milik kategori baris itu
+// (berlaku untuk semua kategori, tidak hardcode per nama). Kalau diisi
+// manual di spreadsheet, nilai itu dipakai apa adanya.
 
 const path = require("path");
 const XLSX = require("xlsx");
@@ -34,14 +39,14 @@ async function main() {
 
   const { data: categories, error: categoriesError } = await supabase
     .from("categories")
-    .select("id, name");
+    .select("id, name, tagline, strengths");
 
   if (categoriesError) {
     console.error("Gagal ambil data categories dari Supabase:", categoriesError.message);
     process.exit(1);
   }
 
-  const categoryIdByName = new Map(categories.map((c) => [c.name, c.id]));
+  const categoryByName = new Map(categories.map((c) => [c.name, c]));
 
   const problems = [];
   const productsToInsert = [];
@@ -56,8 +61,8 @@ async function main() {
       return;
     }
 
-    const categoryId = categoryIdByName.get(categoryName);
-    if (!categoryId) {
+    const category = categoryByName.get(categoryName);
+    if (!category) {
       problems.push(
         `Baris ${excelRow} ("${name}"): category "${categoryName}" tidak cocok dengan nama kategori manapun di database`,
       );
@@ -70,16 +75,30 @@ async function main() {
       return;
     }
 
+    const rawDescription = row.description == null ? "" : row.description.toString();
+    let description = rawDescription;
+
+    if (rawDescription.trim().length === 0) {
+      const hasStrengths = Array.isArray(category.strengths) && category.strengths.length > 0;
+      if (!category.tagline || !hasStrengths) {
+        problems.push(
+          `Baris ${excelRow} ("${name}"): description kosong, dan kategori "${categoryName}" belum punya tagline/strengths lengkap di tabel categories — isi dulu data kategorinya, atau isi description manual di spreadsheet`,
+        );
+        return;
+      }
+      description = `${category.tagline} Keunggulan: ${category.strengths.join(", ")}. Dijahit tangan di Wonogiri — bukan produksi massal.`;
+    }
+
     const photos = [row.photo_url_1, row.photo_url_2, row.photo_url_3]
       .map((url) => (url ?? "").toString().trim())
       .filter(Boolean);
 
     productsToInsert.push({
       name,
-      category_id: categoryId,
+      category_id: category.id,
       sku: row.sku ? row.sku.toString().trim() : null,
       price,
-      description: row.description ? row.description.toString() : null,
+      description,
       photos,
       status: "active",
     });
