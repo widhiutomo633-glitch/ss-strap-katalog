@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "Katalog — SS Strap",
 };
 
+// Data produk berubah kapan saja lewat Supabase — render per request,
+// jangan pakai hasil build lama (App Router default-nya cache statis).
+export const dynamic = "force-dynamic";
+
 export default async function KatalogPage() {
   const [{ data: categories }, { data: products }, { data: stitchStyles }, { data: strapStyles }] =
     await Promise.all([

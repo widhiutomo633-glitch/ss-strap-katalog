@@ -19,6 +19,10 @@ type ProductWithCategory = Product & {
 
 type Params = Promise<{ id: string }>;
 
+// Detail produk (harga, ukuran, foto) bisa berubah kapan saja lewat Supabase —
+// render per request, jangan pakai hasil build lama.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "SS Strap — Handmade Exotic Leather Straps",
 };
 
+// Statistik jumlah kategori/produk aktif harus akurat — render per request.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [{ count: categoryCount }, { count: productCount }] = await Promise.all([
     supabase.from("categories").select("*", { count: "exact", head: true }),
