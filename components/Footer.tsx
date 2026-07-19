@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { DashedRule } from "./DashedRule";
 import { socialLinks } from "@/lib/socialLinks";
 
@@ -6,7 +7,15 @@ export function Footer() {
     <footer className="mx-auto w-full max-w-6xl px-6 py-12 sm:px-10">
       <DashedRule className="mb-8" />
 
-      <p className="max-w-xl text-sm text-parchment-dim">
+      <Image
+        src="/logo/logo_full.png"
+        alt="SS Strap"
+        width={64}
+        height={64}
+        className="h-16 w-16"
+      />
+
+      <p className="mt-6 max-w-xl text-sm text-parchment-dim">
         SS Strap adalah rumah produksi strap kulit handmade dari Wonogiri,
         Jawa — mengerjakan kulit eksotis dan fine grain untuk pasar lokal dan
         ekspor sejak 2018.

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
@@ -13,10 +14,14 @@ export function Navbar() {
     <header className="border-b border-thread/20">
       <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-5 sm:px-10">
         <Link href="/" className="flex items-center gap-2.5">
-          {/* Placeholder monogram — ganti dengan <img src="/logo/..."> begitu file logo asli ada di /public/logo/ */}
-          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-brass font-display text-sm text-brass">
-            SS
-          </span>
+          <Image
+            src="/logo/logo_monogram.png"
+            alt="SS Strap"
+            width={54}
+            height={36}
+            className="h-9 w-auto"
+            priority
+          />
           <span className="font-display text-lg text-parchment">SS Strap</span>
         </Link>
 
