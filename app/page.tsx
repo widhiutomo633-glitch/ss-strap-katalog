@@ -25,6 +25,13 @@ export default async function Home() {
     { value: "2018", label: "Sejak tahun" },
   ];
 
+  const trustChecklist = [
+    "Genuine Leather",
+    "Handmade",
+    "Fully Custom",
+    "Worldwide Shipping",
+  ];
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-16 sm:px-10">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -34,14 +41,28 @@ export default async function Home() {
           </p>
 
           <h1 className="mt-4 font-display text-4xl leading-tight text-parchment sm:text-5xl lg:text-6xl">
-            Ditenun tangan, diekspor <span className="text-brass italic">dunia.</span>
+            Crafted for
+            <br />
+            the Watch
+            <br />
+            You <span className="text-brass italic">Treasure.</span>
           </h1>
 
           <p className="mt-5 max-w-md text-parchment-dim">
-            Strap jam tangan kulit handmade dari Wonogiri, Jawa — dikerjakan
-            satu per satu dari kulit fine grain hingga eksotis, untuk pembeli
-            lokal maupun mancanegara.
+            Handmade leather straps from Indonesia, fully customizable in
+            leather, stitching, size, padding, and finishing.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+            {trustChecklist.map((item) => (
+              <span key={item} className="flex items-center gap-1.5">
+                <span className="text-brass">✓</span>
+                <span className="font-mono text-sm text-parchment-dim">
+                  {item}
+                </span>
+              </span>
+            ))}
+          </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
