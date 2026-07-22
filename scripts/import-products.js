@@ -1,6 +1,7 @@
-// Script sekali pakai: import produk dari template_import_produk.xlsx ke Supabase.
-// Jalankan dengan: node --env-file=.env.local scripts/import-products.js
+// Script sekali pakai: import produk dari file .xlsx ke Supabase.
+// Jalankan dengan: node --env-file=.env.local scripts/import-products.js [nama-file.xlsx]
 // (--env-file supaya SUPABASE_SERVICE_ROLE_KEY di .env.local bisa dibaca script ini)
+// Nama file opsional — default ke template_import_produk.xlsx di root project kalau tidak diisi.
 //
 // Kolom "description" kosong di spreadsheet? Otomatis diisi dari
 // categories.tagline + categories.strengths milik kategori baris itu
@@ -8,11 +9,18 @@
 // manual di spreadsheet, nilai itu dipakai apa adanya.
 
 const path = require("path");
+const fs = require("fs");
 const XLSX = require("xlsx");
 const { createClient } = require("@supabase/supabase-js");
 
-const XLSX_PATH = path.join(__dirname, "..", "template_import_produk.xlsx");
+const xlsxFileName = process.argv[2] || "template_import_produk.xlsx";
+const XLSX_PATH = path.join(__dirname, "..", xlsxFileName);
 const SHEET_NAME = "Produk";
+
+if (!fs.existsSync(XLSX_PATH)) {
+  console.error(`File tidak ketemu: ${XLSX_PATH}`);
+  process.exit(1);
+}
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -107,7 +115,7 @@ async function main() {
   if (problems.length > 0) {
     console.log(`\n${problems.length} baris bermasalah — TIDAK ADA yang diinsert:\n`);
     problems.forEach((p) => console.log(`  - ${p}`));
-    console.log("\nPerbaiki dulu di template_import_produk.xlsx, lalu jalankan lagi scriptnya.");
+    console.log(`\nPerbaiki dulu di ${xlsxFileName}, lalu jalankan lagi scriptnya.`);
     process.exit(1);
   }
 
