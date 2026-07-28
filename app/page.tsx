@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { DashedRule } from "@/components/DashedRule";
@@ -90,12 +91,15 @@ export default async function Home() {
         </div>
 
         <div>
-          {/* Placeholder visual — ganti isi div ini dengan <img src="..." className="h-full w-full object-cover" />
-              begitu foto produk unggulan sudah ada */}
-          <div className="flex aspect-[4/5] items-center justify-center rounded-lg border border-thread/20 bg-hide-light">
-            <span className="font-mono text-xs text-parchment-dim/60">
-              Foto produk unggulan
-            </span>
+          <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-thread/20 bg-hide-light">
+            <Image
+              src="https://oaquezouqeihriurwalr.supabase.co/storage/v1/object/public/product-photos/PROSES/IMG_0154.JPG"
+              alt="Proses pembuatan strap SS Strap"
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
       </div>
